@@ -37,12 +37,15 @@ class GoogleScrapSpider(CrawlSpider):
 
     def parse_google_news(self, response):
         """Parse the Google News search results page."""
+        scrape_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+
         for article in response.css('article'):
             yield {
                 'title': article.css('h3 a::text').get(),
                 'link': response.urljoin(article.css('h3 a::attr(href)').get()),
                 'source': article.css('div > div > a::text').get(),
-                'time': article.css('time::attr(datetime)').get()
+                'time': article.css('time::attr(datetime)').get(), 
+                'scrape_time': scrape_time  # Add the timestamp here
             }
         
         # Follow next page links (if any)
